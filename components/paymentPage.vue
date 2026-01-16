@@ -74,7 +74,7 @@
                       <span v-if="getPromoInfo(item).hasPromo">
                         <del>£ {{ item.price * item.quantity }}</del>
                         £ {{ getItemPrice(item) * item.quantity }}
-                        <span class="discount-badge">({{ getPromoInfo(item).discountPercent }}% OFF)</span>
+                        <span class="discount-badge">({{ getPromoInfo(item).discountPercent }}% OFF for 6 months)</span>
                       </span>
                       <span v-else>
                         £ {{ item.price * item.quantity }}
