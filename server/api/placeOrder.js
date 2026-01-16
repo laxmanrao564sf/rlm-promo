@@ -100,9 +100,9 @@ export default defineEventHandler(async (event) => {
                 let discountValue;
                 if (isSplitProduct) {
                     if (splitIndex === 0) {
-                        discountValue = 0;
-                    } else {
                         discountValue = SPLIT_PRODUCTS[product.name] || 0;
+                    } else {
+                        discountValue = 0;
                     }
                 } else {
                     discountValue = parseFloat(
@@ -145,8 +145,6 @@ export default defineEventHandler(async (event) => {
                         // Add EndDate if NOT Evergreen
                         if (product?.pricingModelType !== 'Evergreen') {
                             endDate.setMonth(endDate.getMonth() + 6);
-                            // endDate.setDate(endDate.getDate() - 1); // Optional: Standard -1 day logic, enable if needed
-                            //orderItem.record.EndDate = endDate.toISOString().split('T')[0];
                         }
                     } else {
                         // PART 2: 6 Months to 12 Months (or indefinite)
@@ -156,12 +154,9 @@ export default defineEventHandler(async (event) => {
                         // Add EndDate if NOT Evergreen
                         if (product?.pricingModelType !== 'Evergreen') {
                             endDate.setMonth(endDate.getMonth() + 12);
-                            // endDate.setDate(endDate.getDate() - 1); // Optional: Standard -1 day logic
-                            //orderItem.record.EndDate = endDate.toISOString().split('T')[0];
                         }
                     }
                 } else {
-                    // Logic for REGULAR PRODUCTS (Existing Logic)
                     if (product?.periodBoundary !== 'OneTime') {
                         if (product?.pricingModelType !== 'Evergreen') {
                             const date = new Date(today); 
