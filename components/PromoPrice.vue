@@ -7,7 +7,7 @@
       £ {{ promoInfo.hasPromo ? promoInfo.promoPrice : promoInfo.originalPrice }}
     </span>
     <span v-if="promoInfo.hasPromo" class="discount-badge">
-      ({{ promoInfo.discountPercent }}% OFF)
+      ({{ promoInfo.discountPercent }}% OFF for 6 months)
     </span>
   </div>
 </template>
