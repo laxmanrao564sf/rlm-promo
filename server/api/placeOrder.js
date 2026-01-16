@@ -77,16 +77,16 @@ export default defineEventHandler(async (event) => {
         let attributeRefCounter = 0;
 
         // 1. Define products eligible for splitting
-        const SPLIT_PRODUCTS = [
-            "Business Insider", 
-            "AD Digital", 
-            "VK Saturday Plus", 
-            "National Geographic"
-        ];
+        const SPLIT_PRODUCTS = {
+            "Business Insider": 15,
+            "AD Digital": 10,
+            "VK Saturday Plus": 10,
+            "National Geographic": 12
+        };
 
         body.products?.forEach((product, index) => {
             // 2. Determine if this specific product should be split
-            const isSplitProduct = SPLIT_PRODUCTS.includes(product?.name);
+            const isSplitProduct = SPLIT_PRODUCTS.hasOwnProperty(product?.name);
             
             // If split product: iterate twice (0, 1). If regular: iterate once (0).
             const iterations = isSplitProduct ? [0, 1] : [0];
@@ -96,6 +96,19 @@ export default defineEventHandler(async (event) => {
                 // If regular: refOrderItem0. If split: refOrderItem0_0, refOrderItem0_1
                 const suffix = isSplitProduct ? `_${splitIndex}` : '';
                 const orderItemRefId = `refOrderItem${index}${suffix}`;
+                
+                let discountValue;
+                if (isSplitProduct) {
+                    if (splitIndex === 0) {
+                        discountValue = 0;
+                    } else {
+                        discountValue = SPLIT_PRODUCTS[product.name] || 0;
+                    }
+                } else {
+                    discountValue = parseFloat(
+                        ((body?.user?.discount || 0) / (body?.products?.length || 1)).toFixed(2)
+                    );
+                }
                 
                 let orderItem = {
                     referenceId: orderItemRefId,
@@ -112,9 +125,7 @@ export default defineEventHandler(async (event) => {
                         ListPrice: product?.listPrice || product?.price,
                         UnitPrice: product?.price,
                         NetUnitPrice: product?.price,
-                        Discount: parseFloat(
-                                    ((body?.user?.discount || 0) / (body?.products?.length || 1)).toFixed(2)
-                                ),
+                        Discount: discountValue,
                         PeriodBoundary: "Anniversary", 
                         ServiceDate: today.toISOString().split('T')[0],
                     },
