@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "title": "Home",
+      "type": "link",
+      "path": "/"
+    },
+    {
+      "title": "Business Units",
+      "type": "link",
+      "path": "#"
+    },
+    {
+      "title": "Our Offers",
+      "type": "link",
+      "path": "#"
+    }
+  ]
+}

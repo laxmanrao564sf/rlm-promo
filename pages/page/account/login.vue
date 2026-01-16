@@ -1,0 +1,106 @@
+<template>
+<Header/>
+<div>
+    <WidgetsBreadcrumbs title="Login" />
+    <section class="login-page section-b-space">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>{{logintitle}}</h3>
+                    <div class="theme-card">
+                        <span class="validate-error" v-if="errormsg">{{ errormsg }}</span>
+                        <form class="theme-form" @submit.prevent="onSubmit">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" v-model="user.email.value" placeholder="Email" name="email" />
+                                <span class="validate-error" v-if="!user.email.value || !validEmail(user.email.value) ">{{ user.email.errormsg }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" v-model="user.password.value" placeholder="Enter your password"  />
+                                <span class="validate-error" v-if="user.password.value.length < 7">{{ user.password.errormsg }}</span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-solid" >Login</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6 right-login">
+                    <h3>{{registertitle}}</h3>
+                    <div class="theme-card authentication-right">
+                        <h6 class="title-font">Create A Account</h6>
+                        <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.</p>
+                        <nuxt-link :to="{ path: '/page/account/register'}" class="btn btn-solid">Create an Account</nuxt-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<Footer />
+</template>
+
+<script>
+import UserAuth from '../auth/auth';
+import { useCartStore } from '~~/store/cart';
+
+export default {
+   
+  
+    data() {
+        return {
+            result: {email:'',password:''},
+            logintitle: 'Login',
+            registertitle: 'New Customer',
+            user: {
+                email: {
+                    value: 'test@admin.com',
+                    errormsg: ''
+                },
+                password: {
+                    value: 'test@123456',
+                    errormsg: ''
+                }
+            },
+            errormsg: '',
+        }
+    },
+    computed:{
+        cart(){
+            return useCartStore().cartItems
+        },
+    },
+    methods: {
+        async onSubmit() {
+             try {
+                const customer = await this.$loginUser({
+                    email: this.user.email?.value,
+                    password: this.user.password?.value,
+                });
+                if (customer.status !== 200) {
+                    this.errormsg = 'User does not exists on the platform. Can you register and try again?';
+                } 
+
+                UserAuth.localLogin(customer.data);
+    
+                if (this.cart.length > 0) {
+                    await this.$router.replace('/page/account/checkout');
+                }
+                else {
+                   await this.$router.replace('/');
+                }
+
+            } catch(err){
+                console.error('Login failed:', err);
+                this.errormsg = 'Something went wrong. Please try again later.';
+            }
+
+        },
+        validEmail: function (email) {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return re.test(email)
+        }
+    }
+
+}
+</script>

@@ -1,0 +1,248 @@
+<template>
+  <div>
+    <div class="icon-nav">
+      <ul>
+        <li class="onhover-div mobile-search">
+          <div>
+            <img
+              alt
+              src="/images/icon/layout4/search.png"
+              @click="openSearch()"
+              class="img-fluid"
+            >
+            <i class="ti-search" @click="openSearch()"></i>
+          </div>
+          <div id="search-overlay" class="search-overlay" :class="{ opensearch:search }">
+            <div>
+              <span class="closebtn" @click="closeSearch()" title="Close Overlay">x</span>
+              <div class="overlay-content">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-xl-12">
+                      <form>
+                        <div class="form-group mb-0">
+                          <input
+                            type="text"
+                            class="form-control"
+                            v-model="searchString"
+                           
+                            placeholder="Search a Product"
+                          >
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </form>
+                      <ul class="search-results" v-if="searchItems.length">
+                        <li v-for="(product,index) in searchItems" :key="index" class="product-box">
+                          <div class="img-wrapper">
+                            <img
+                              :src='getImgUrl(product.images[0].src)'
+                              class="img-fluid bg-img"
+                              :key="index"
+                            />
+                          </div>
+                          <div class="product-detail">
+                            <nuxt-link :to="{ path: '/product/sidebar/'+product.id}">
+                              <h6>{{ product.title }}</h6>
+                            </nuxt-link>
+                            <PromoPrice :product="product" />
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="onhover-div mobile-setting">
+          <div>
+            <img alt src="/images/icon/layout4/setting.png" class="img-fluid">
+            <i class="ti-settings"></i>
+          </div>
+          <div class="show-div setting">
+            <h6>Language</h6>
+            <ul class="list-inline">
+              <li>
+                <Nuxt-link v-for="locale in language" :key="locale.code" @click="setlang(locale.code)" to="javascript:void(0)">
+                     {{ locale.name }} 
+                </Nuxt-link>
+              </li>
+             
+            </ul>
+            <h6>currency</h6>
+            <ul class="list-inline">
+              <li>
+                <a href="javascript:void(0)" @click="updateCurrency('eur', '€')">eur</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)" @click="updateCurrency('inr', '₹')">inr</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)" @click="updateCurrency('gbp', '£')">gbp</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)" @click="updateCurrency('usd', '$')">usd</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="onhover-div mobile-cart">
+          <div>
+            <img alt src="/images/icon/layout4/cart.png" class="img-fluid">
+            <i class="ti-shopping-cart"></i>
+            <span class="cart_qty_cls">{{cart?.length ?? 0}}</span>
+          </div>
+          <ul class="show-div shopping-cart" v-if="!cart?.length">
+            <li>Your cart is currently empty.</li>
+          </ul>
+          <ul class="show-div shopping-cart" v-if="cart?.length">
+            <li v-for="(item,index) in cart" :key="index">
+              <div class="media">
+                <nuxt-link :to="{ path: '/product/sidebar/'+item.id}">
+                  <img alt class="mr-3" :src='getImage(item?.image)'>
+                </nuxt-link>
+                <div class="media-body ps-3">
+                  <nuxt-link :to="{ path: '/product/sidebar/'+item.id}">
+                    <h4>{{item.name}}</h4>
+                  </nuxt-link>
+                  <h4>
+                    <span>{{item.quantity}} x £&nbsp;{{ getItemPrice(item).toFixed(2) }}</span>
+                  </h4>
+                </div>
+              </div>
+              <div class="close-circle">
+                <a href="#" @click='removeCartItem(item)'>
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </a>
+              </div>
+            </li>
+            <li>
+              <div class="total">
+                <h5>
+                  subtotal :
+                  <span v-if="cartSavings > 0">
+                    <del>£&nbsp;{{ cartOriginalTotal.toFixed(2) }}</del>
+                    £&nbsp;{{ cartTotal.toFixed(2) }}
+                    <span class="savings-badge">(Save £{{ cartSavings.toFixed(2) }})</span>
+                  </span>
+                  <span v-else>
+                    £&nbsp;{{ cartTotal.toFixed(2) }}
+                  </span>
+                </h5>
+              </div>
+            </li>
+            <li>
+              <div class="d-flex justify-content-around">
+                  <nuxt-link :to="{ path: '/page/account/cart'}" :class="'view-cart btn btn-solid text-nowrap p-1 px-2'">
+                    view cart
+                  </nuxt-link>
+                  <nuxt-link :to="{ path: '/page/account/checkout'}" :class="'checkout btn btn-solid text-nowrap p-1 px-2'">
+                    checkout
+                  </nuxt-link>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+<script>
+import { useProductStore } from '~/store/products'
+import {useCartStore} from '~/store/cart'
+import { mapState } from 'pinia'
+import PromoPrice from '~/components/PromoPrice.vue'
+import { usePromo } from '~/composables/usePromo'
+export default {
+  components: {
+    PromoPrice,
+  },
+  data() {
+    return {
+      currencyChange: {},
+      search: false,
+      searchString: '',
+      lang:[
+        {
+          code:'en',
+          name:'English'
+        },
+        {
+          code:'fr',
+          name:'French'
+        }
+      ]
+    }
+  },
+  computed: {
+    ...mapState(useProductStore,{
+      searchItems: 'searchProducts',      
+    }),
+    language(){
+      return this.lang.filter((lang) => lang.code != this.$i18n.locale)
+    },
+    ...mapState(useCartStore,{
+      // cart:(store)=> store.cartItems,
+      cartTotal:(store)=> store.cartTotalAmount,
+      cartOriginalTotal:(store)=> store.cartOriginalTotal,
+      cartSavings:(store)=> store.cartSavings,
+    }),
+    cart(){
+      return useCartStore().cartItems
+    },
+    curr(){  
+      return useProductStore().changeCurrency
+    }
+
+  },
+  watch:{
+    searchString(){
+      useProductStore().searchProduct(this.searchString)
+    },
+    cart(){
+      useCartStore().cartItems
+    },
+  },
+  methods: {
+    getImage(img) {
+      return img?.replace(/&amp;/g, '&') ?? '/images/6.jpg'
+    },
+    getItemPrice(item) {
+      const { getPromoInfo } = usePromo();
+      const promoInfo = getPromoInfo(item);
+      return promoInfo.hasPromo ? promoInfo.promoPrice : item.price;
+    },
+    openSearch() {
+      this.search = true
+    },
+    closeSearch() {
+      this.search = false
+    },
+    searchProduct() {
+    },
+    removeCartItem: function (product) {
+      useCartStore().removeCartItem(product)
+      if(this.cart.length==0 && this.$route.name=== 'page-account-checkout'){
+        this.$router.replace('/page/account/cart')
+      }
+    },
+    setlang(name){
+      this.$i18n.locale = name
+    },
+    updateCurrency: function (currency, currSymbol) {
+      this.currencyChange = { value: currency, symbol: currSymbol }
+      useProductStore().changeCurrency2(this.currencyChange)
+    }
+  },
+}
+</script>
+<style scoped>
+.savings-badge {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+</style>

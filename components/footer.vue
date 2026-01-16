@@ -1,0 +1,146 @@
+<template>
+  <div>
+    <footer class="sticky-footer bg-gradient bg-black">
+      <section class="section-b-space darken-layout">
+        <div class="container">
+          <div class="row footer-theme partition-f">
+            <div class="col-lg-6 col-md-6">
+              <div class="footer-title footer-mobile-title">
+                <h4>about</h4>
+              </div>
+              <div class="footer-contant">
+                <div class="footer-logo">
+                  <img src="/images/icon/logo.png" alt="logo" />
+                </div>
+                <p>Discover a world of premium products and innovative solutions designed to meet your global needs. At Nexus Global Holdings, we pride ourselves on delivering excellence and value in everything we offer. Start your journey with us today and experience shopping like never before</p>
+                <div class="footer-social">
+                  <ul>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-facebook" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-google-plus" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-instagram" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-rss" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="sub-title">
+                <div class="footer-title">
+                  <h4>why we choose</h4>
+                </div>
+                <div class="footer-contant">
+                  <ul>
+                    <li>
+                      <a href="#">shipping &amp; return</a>
+                    </li>
+                    <li>
+                      <a href="#">secure shopping</a>
+                    </li>
+                    <li>
+                      <a href="#">gallary</a>
+                    </li>
+                    <li>
+                      <a href="#">affiliates</a>
+                    </li>
+                    <li>
+                      <a href="#">contacts</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="sub-title">
+                <div class="footer-title">
+                  <h4>store information</h4>
+                </div>
+                <div class="footer-contant">
+                  <ul class="contact-list">
+                    <li>
+                      <i class="fa fa-map-marker"></i>Nexus Global Holdings, <br>56 Technology Park, Suite 12B, London, EC1V 4AB, United Kingdom
+                    </li>
+                    <li>
+                      <i class="fa fa-phone"></i>Call Us: 123-456-7898
+                    </li>
+                    <li>
+                      <i class="fa fa-envelope-o"></i>Email Us:
+                      <a href="#">Support@Fiot.com</a>
+                    </li>
+                    <li>
+                      <i class="fa fa-fax"></i>Fax: 123456
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="sub-footer dark-subfooter">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-6 col-md-6 col-sm-12">
+              <div class="footer-end">
+                <p>
+                  <i class="fa fa-copyright" aria-hidden="true"></i> 2024 Nexus Global Holding
+                </p>
+              </div>
+            </div>
+            <div class="col-xl-6 col-md-6 col-sm-12">
+              <div class="payment-card-bottom">
+                <ul>
+                  <li>
+                    <a href="#">
+                      <img src='/images/icon/visa.png' alt="visa" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <img src='/images/icon/mastercard.png' alt="mastercard" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <img src='/images/icon/paypal.png' alt="paypal" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <img src='/images/icon/american-express.png' alt="american-express" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <img src='/images/icon/discover.png' alt="" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</template>
